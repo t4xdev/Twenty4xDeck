@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+__MACOSX/
+
+# Wrangler local cache (holds Cloudflare account details)
+.wrangler/
+.dev.vars
+.env*
+
+# Node
+node_modules/
+
+# Zip bundles (the source files are already in the repo)
+*.zip
