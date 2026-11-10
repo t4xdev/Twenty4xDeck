@@ -1,0 +1,15 @@
+import w from './src/worker.js';
+const env={BREVO_API_KEY:'test-key',SENDER_EMAIL:'noreply@twenty4x.net',SENDER_NAME:'Twenty4x Website',LEAD_RECIPIENTS:'hello@twenty4x.com,ceo@twenty4x.com,productmanager@maritimeexpertise.com',ALLOWED_ORIGINS:'https://twenty4x.com'};
+let sent=[], brevoStatus=201;
+globalThis.fetch=async(url,init)=>{ sent.push({url,init}); return new Response(JSON.stringify(brevoStatus===201?{messageId:'<abc@brevo>'}:{code:'unauthorized'}),{status:brevoStatus}); };
+const lead={source:'twenty4x-bridge-lead-form',version:3,submittedAt:'2026-11-03T10:00:00Z',contact:{name:'Asha Rao',email:'asha@fleetco.com',company:'FleetCo <b>',role:'Superintendent',note:'Hi'},fleet:{size:'6 to 20',vesselTypes:['Tankers']},priorities:[{priority:'Spares arriving late',suggestedModules:['GoTrac','Pixel PMS']}],suggestedModules:['Main Fleet','GoTrac','Pixel PMS'],attribution:{page:'https://twenty4x.com/',utm_source:'linkedin'},journey:{secondsToComplete:64}};
+const req=(body,origin='https://twenty4x.com',method='POST')=>new Request('https://relay.test/',{method,headers:{'Content-Type':'application/json',Origin:origin},body:method==='POST'?JSON.stringify(body):undefined});
+const show=async(label,r)=>console.log(label,r.status,await r.text(),r.headers.get('access-control-allow-origin'));
+await show('preflight',await w.fetch(req(null,'https://twenty4x.com','OPTIONS'),env));
+await show('ok',await w.fetch(req(lead),env));
+const b=JSON.parse(sent[0].init.body); console.log(' to:',b.to.map(x=>x.email).join(' | '),' replyTo:',b.replyTo.email,' subject:',b.subject,' key hdr:',sent[0].init.headers['api-key'],' escaped:',b.htmlContent.includes('FleetCo &lt;b&gt;'));
+await show('bad origin',await w.fetch(req(lead,'https://evil.example'),env));
+await show('missing name',await w.fetch(req({...lead,contact:{...lead.contact,name:''}}),env));
+sent=[]; await show('honeypot',await w.fetch(req({...lead,hp:'x'}),env)); console.log(' brevo calls:',sent.length);
+brevoStatus=401; await show('brevo fails',await w.fetch(req(lead),env));
+await show('no key',await w.fetch(req(lead),{...env,BREVO_API_KEY:''}));

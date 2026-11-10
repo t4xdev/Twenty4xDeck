@@ -1,0 +1,49 @@
+name = "twenty4x-lead-relay"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+#LEAD_RECIPIENTS = "hello@twenty4x.com,ceo@twenty4x.com,productmanager@maritimeexpertise.com,productmanager@twenty4x.com"
+LEAD_RECIPIENTS = "productmanager@maritimeexpertise.com,productmanager@twenty4x.com"
+# Must be a sender or domain verified in Brevo (Senders, domains and dedicated IPs).
+SENDER_EMAIL = "noreply@twenty4x.net"
+SENDER_NAME = "Twenty4x Website"
+# The origins allowed to post the form. Add every domain the site is served from.
+ALLOWED_ORIGINS = "https://twenty4x.com,https://www.twenty4x.com,https://maritimeexpertise.com,https://www.maritimeexpertise.com,https://deck.twenty4x.com,https://www.deck.twenty4x.com,https://twenty4x.net,https://www.twenty4x.net,https://deck.twenty4x.net"
+# Client links (<relay-url>/links) point here. Comma-separated: the first is the default, more show as a choice.
+# Each must serve the updated portal index.html and be listed in ALLOWED_ORIGINS.
+PORTAL_URLS = "https://deck.twenty4x.net/"
+# When deck.twenty4x.com is live too, use this line instead (a dropdown then appears on /links):
+# PORTAL_URLS = "https://deck.twenty4x.net/,https://deck.twenty4x.com/"
+# Tracked-link visits (portal links with utm_* tags). View them at <relay-url>/visits.
+# Who gets "link opened" emails. Leave commented out to use LEAD_RECIPIENTS.
+# VISIT_RECIPIENTS = "productmanager@twenty4x.com"
+# Set to "off" to stop visit emails (visits are still saved).
+VISIT_EMAILS = "on"
+
+# The Brevo key is NOT here. Set it as an encrypted secret:
+#   npx wrangler secret put BREVO_API_KEY
+[observability]
+enabled = false
+head_sampling_rate = 1
+redact_query_string = false
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+invocation_logs = true
+persist = true
+
+[observability.traces]
+enabled = true
+head_sampling_rate = 1
+persist = true
+
+[observability.issue_detection]
+enabled = true
+
+# Every lead is also saved here. View them at <relay-url>/leads (password: ADMIN_PASSWORD secret).
+[[d1_databases]]
+binding = "DB"
+database_name = "twenty4x-leads"
+database_id = "0b6c417a-b0d4-45eb-b25e-2203e6edd0f1"
