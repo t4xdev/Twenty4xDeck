@@ -4,7 +4,7 @@ compatibility_date = "2026-10-01"
 
 [vars]
 #LEAD_RECIPIENTS = "hello@twenty4x.com,ceo@twenty4x.com,productmanager@maritimeexpertise.com,productmanager@twenty4x.com"
-LEAD_RECIPIENTS = "productmanager@maritimeexpertise.com,productmanager@twenty4x.com"
+LEAD_RECIPIENTS = "productmanager@maritimeexpertise.com,productmanager@twenty4x.com,James@maritimeexpertise.com"
 # Must be a sender or domain verified in Brevo (Senders, domains and dedicated IPs).
 SENDER_EMAIL = "noreply@twenty4x.net"
 SENDER_NAME = "Twenty4x Website"
