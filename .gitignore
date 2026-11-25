@@ -12,3 +12,4 @@ node_modules/
 
 # Zip bundles (the source files are already in the repo)
 *.zip
+Archive.zip
